@@ -1,0 +1,217 @@
+#include<stdio.h>
+#include<conio.h>
+#include<Windows.h>
+void menu();
+void Giris();
+void ParaDurumu();
+void ParaEkleme();
+void ParaCekme();
+void Havale();
+
+int secim;
+char kullaniciAdi[BUFSIZ];
+char sifre[BUFSIZ];
+double paraMiktari=100;
+double paraEkle=0;
+double paraCek=0;
+double havale[BUFSIZ];
+double paraGonder=0;
+char giris='0';				// Giris yapilip yapilmadigini kontrol eder.
+
+void menu()
+{
+
+	printf("1 Giris");
+	printf("\n2 Para Miktari");
+	printf("\n3 Para Ekleme");
+	printf("\n4 Para Cekme");
+	printf("\n5 Havale");
+	printf("\n0 Cikis");
+}
+void main()
+{
+
+	/*ParaCekme();*/
+	printf("\t\t\tHOSGELDINIZ..\n\n");
+	menu();
+	do
+	{
+
+
+		printf("\nSeciminiz:");
+		scanf("%d", &secim);
+		printf("\n");
+		switch (secim)
+		{
+
+
+		case 1:
+			Giris();
+			break;
+		case 2:
+			if(giris=='1')					//Eger giris yapildiysa bu islemleri gerceklestirecek.
+			{
+				ParaDurumu();
+			}
+			else
+			{
+				printf("Lutfen giris yapiniz..!\n");
+			}
+			break;
+		case 3:
+			if(giris=='1')
+			{
+				ParaEkleme();
+			}else
+			{
+				printf("Lutfen giris yapiniz..!\n");
+			}
+			break;
+		case 4:
+			if(giris=='1')
+			{
+				ParaCekme();
+			}else
+			{
+				printf("Lutfen giris yapiniz..!\n");
+			}
+			break;
+
+		case 5:
+
+			if(giris=='1')
+			{
+				Havale();
+			}else
+			{
+				printf("Lutfen giris yapiniz..!\n");
+			}
+			break;
+		
+		case 0:
+			printf("Bizi Kullandiginiz Icin Tesekkur Ederiz..\n");
+			break;
+
+		default :
+			printf("Lutfen 0 ile 5 arasi bir deger giriniz..!\n");
+			break;
+
+		}
+	}
+	//}
+	while (secim != 0);
+	getch();
+		
+}
+
+void Giris()
+{
+	if(strlen(kullaniciAdi)>0 && strlen(sifre)>0)			//Eger giris yapildiysa tekrar giris yapilmasini engelleyecek.
+	{
+		printf("Zaten giris yaptiniz..");
+		getch();
+		system("cls");
+		menu();
+		return;
+	}
+	system("cls");				// Sayfa temizleme
+	printf("\t\tGIRIS\n");
+	do
+	{
+		printf("Kullanici Adi:");
+		flushall();
+		scanf("%s", &kullaniciAdi);
+		printf("\nSifre:");
+		scanf("%s", &sifre);
+
+	} while (kullaniciAdi==NULL || sifre==NULL);
+
+	if(kullaniciAdi != NULL && sifre !=NULL)
+	{
+		giris='1';
+		system("cls");
+		printf("\nGiris basarili..\n");
+		menu();
+	}
+	else
+		printf("Lutfen kullanici adi ve sifre giriniz.\n");
+
+
+}
+
+void ParaDurumu()
+{
+	printf("Mevcut Para Mikariniz: %5.2f TL\n", paraMiktari);
+}
+
+void ParaEkleme()
+{
+	printf("Eklemek istediginiz miktari giriniz:");
+	scanf("%lf", &paraEkle);
+	paraMiktari+=paraEkle;
+	if(paraMiktari > paraEkle)					// Para miktari eklenen paradan büyük ise ekleme yapılmış olacak.
+		printf("Ekleme Basarili..\n");
+	printf("Mevcut Para durumu: %5.2f\n\n", paraMiktari);
+}
+
+void ParaCekme()
+{
+	do
+	{
+		printf("Para durumu: %5.2f\n", paraMiktari);
+		printf("Cekmek istediginiz miktari giriniz:");
+		scanf("%lf", &paraCek);
+		printf("\n");
+		if(paraCek>paraMiktari)				//Bu durumda çekilecek para olmaz.
+			printf("Hesabinizda bulunandan daha fazla para cekemezsiniz!(Cikmak icin -1 girin)\n\n");
+		if(paraCek==-1)
+		{
+			system("cls");
+			menu();
+			return;
+
+		}
+	}
+	while(paraCek>paraMiktari);
+
+
+
+	paraMiktari-=paraCek; 
+	printf("Para durumu: %5.2f\n\n", paraMiktari);
+
+
+}
+
+void Havale()
+{
+	do
+	{
+		printf("\nGonderilecek hesap numarasini giriniz:");
+		scanf("%lf", &havale);
+	}
+	while(havale==NULL);
+
+	do
+	{
+		printf("Para durumu: %5.2f\n", paraMiktari);
+		
+		printf("\nGonderilecek miktari giriniz:");
+		scanf("%lf", &paraGonder);
+		printf("\n");
+		if(paraGonder>paraMiktari)				//Bu durumda gönderilecek para mevcut olmaz.
+			printf("Hesabinizda bulunandan daha fazla para gonderemezsiniz!(Cikmak icin -1 girin)\n\n");
+		if(paraGonder==-1)
+		{
+			system("cls");
+			menu();
+			return;
+
+		}
+	}
+	while(paraGonder>paraMiktari);
+
+	paraMiktari -= paraGonder;
+	printf("Para gonderimi Basarili..!");
+	printf("Mevcut Para Durumu:%5.2f\n", paraMiktari);
+
+}
